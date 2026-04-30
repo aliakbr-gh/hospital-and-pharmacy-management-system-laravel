@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id()->comment('Primary key');
-        
+
             $table->string('username')->unique()->comment('Login username for staff');
             $table->string('password')->comment('Hashed password');
-        
+
             $table->string('phone')->nullable()->comment('Contact number of staff');
             $table->enum('role', ['reception', 'pharmacy', 'admin'])
-                  ->comment('Defines system access level');
-        
+                ->comment('Defines system access level');
+
             $table->boolean('is_active')->default(true)
-                  ->comment('User active/inactive status');
-        
+                ->comment('User active/inactive status');
+
             $table->timestamps();
         });
     }
