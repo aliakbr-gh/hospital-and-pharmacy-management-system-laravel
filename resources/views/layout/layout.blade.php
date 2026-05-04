@@ -97,7 +97,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item" href="#">Profile</a>
+                                    <a class="dropdown-item" href="/profile">Profile</a>
                                 </li>
 
                                 <li>
@@ -123,8 +123,8 @@
 
     <!-- Content -->
     <div class="container-fluid py-4">
-        <div class="card shadow-sm bg-body border">
-            <div class="card-body">
+        <div class="bg-body">
+            <div>
                 <h4 class="mb-4 text-center">@yield('page-title')</h4>
                 @yield('content')
             </div>
@@ -193,6 +193,33 @@
 
             btn.innerText = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
         });
+
+        function logoutUser(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/logout",
+                method: "POST",
+
+                beforeSend: function() {
+                    showLoader();
+                },
+
+                success: function(response) {
+                    console.log(response);
+                    showToast(response?.message);
+                    redirect("/");
+                },
+
+                error: function(error) {
+                    console.log(error?.responseJSON);
+                    showToast(error?.responseJSON?.message, 'error');
+                },
+
+                complete: function() {
+                    hideLoader();
+                }
+            });
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

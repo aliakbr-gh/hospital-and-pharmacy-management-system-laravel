@@ -25,6 +25,10 @@ class User extends Authenticatable
         'is_active'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *

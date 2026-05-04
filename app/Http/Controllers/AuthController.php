@@ -50,4 +50,17 @@ class AuthController extends Controller
 
             return APIResponse::success("Logged out successfully");
         }
+
+        public function profile(Request $request)
+        {
+            $profile = $request->user()->only([
+                'id',
+                'username',
+                'phone',
+                'role',
+                'is_active',
+                'created_at'
+            ]);
+            return response()->view('profile.profile', compact('profile'));
+        }
 }
