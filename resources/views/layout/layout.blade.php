@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light" id="appTheme">
 
 <head>
     <meta charset="UTF-8">
@@ -13,9 +13,16 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+    </style>
+
 </head>
 
-<body class="bg-light">
+<body class="bg-body text-body">
 
     <!-- Loader -->
     <div id="globalLoader"
@@ -28,15 +35,95 @@
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg bg-body border-bottom">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">HMS</a>
+
+            <!-- Brand -->
+            <a class="navbar-brand fw-bold" href="/dashboard">HMS</a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Nav Items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Left side links -->
+                <ul class="navbar-nav me-auto">
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}" href="/dashboard">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Patients
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Appointments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Pharmacy
+                            </a>
+                        </li>
+                    @endauth
+
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">
+                                Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('register') ? 'active' : '' }}" href="/register">
+                                Register
+                            </a>
+                        </li>
+                    @endguest
+                </ul>
+
+                <!-- Right side (User) -->
+                <ul class="navbar-nav">
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ auth()->user()->username }}
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="#">Profile</a>
+                                </li>
+
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li>
+                                    <form onsubmit="logoutUser(event)">
+                                        @csrf
+                                        <button class="dropdown-item text-danger">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @endauth
+                    <button class="btn btn-secondary" onclick="toggleTheme()" id="themeBtn">
+                        Dark Mode
+                    </button>
+                </ul>
+            </div>
         </div>
     </nav>
 
     <!-- Content -->
-    <div class="container py-4">
-        <div class="card shadow-sm">
+    <div class="container-fluid py-4">
+        <div class="card shadow-sm bg-body border">
             <div class="card-body">
                 <h4 class="mb-4 text-center">@yield('page-title')</h4>
                 @yield('content')
@@ -83,6 +170,28 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        function toggleTheme() {
+            const html = document.getElementById('appTheme');
+            const btn = document.getElementById('themeBtn');
+
+            const current = html.getAttribute('data-bs-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+
+            html.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            btn.innerText = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+        }
+
+        $(document).ready(function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const btn = document.getElementById('themeBtn');
+
+            document.getElementById('appTheme').setAttribute('data-bs-theme', savedTheme);
+
+            btn.innerText = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
         });
     </script>
 
