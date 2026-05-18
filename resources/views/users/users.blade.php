@@ -36,7 +36,7 @@
                             <td>{{ $user->phone }}</td>
                             <td>
                                 <span class="badge bg-info text-dark">
-                                    {{ ucfirst($user->role->name) }}
+                                    {{ ucfirst($user->role->name ?? "No Role") }}
                                 </span>
                             </td>
                             <td>
