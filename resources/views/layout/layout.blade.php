@@ -35,6 +35,7 @@
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
 
     <!-- Navbar -->
+    @if(!($hideHeader ?? false))
     <nav class="navbar navbar-expand-lg bg-body border-bottom">
         <div class="container">
 
@@ -135,6 +136,7 @@
             </div>
         </div>
     </nav>
+    @endif
 
     <!-- Content -->
     <div class="container-fluid py-4">
@@ -172,7 +174,7 @@
                 toast.fadeOut(500, function() {
                     $(this).remove();
                 });
-            }, 3000);
+            }, 700);
         }
 
         function redirect(location = "/", timeOut = 500) {

@@ -6,61 +6,48 @@ use App\Helpers\APIResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-        public function register(Request $request)
-        {
-            $request->validate([
-                'username' => 'required|unique:users',
-                'password' => 'required|min:4',
-                'role' => 'required',
-            ]);
+    public function login(Request $request)
+    {
+        $credentials = [
+            'username' => $request->username,
+            'password' => $request->password,
+            'is_active' => 1,
+        ];
 
-            $user = User::create([
-                'username' => $request->username,
-                'phone' => $request->phone,
-                'role' => $request->role,
-                'password' => Hash::make($request->password),
-                'is_active' => 1
-            ]);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-            return APIResponse::success("User registered successfully", $user, 201);
+            return APIResponse::success('Login successfully', Auth::user());
         }
 
-        public function login(Request $request)
-        {
-            $credentials = $request->only('username', 'password');
+        return APIResponse::error('Invalid credentials or inactive user', [], 401);
+    }
 
-            if (Auth::attempt($credentials)) {
-                $request->session()->regenerate();
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-                return APIResponse::success("Login successfully", Auth::user());
-            }
+        return APIResponse::success('Logged out successfully');
+    }
 
-            return APIResponse::error('Invalid credentials', [], 401);
-        }
+    public function profile(Request $request)
+    {
+        $profile = $request->user()->only([
+            'id',
+            'username',
+            'phone',
+            'role',
+            'is_active',
+            'created_at',
+        ]);
 
-        public function logout(Request $request)
-        {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        $user = User::with('roles')->where('id', Auth::user()->id)->first();
 
-            return APIResponse::success("Logged out successfully");
-        }
-
-        public function profile(Request $request)
-        {
-            $profile = $request->user()->only([
-                'id',
-                'username',
-                'phone',
-                'role',
-                'is_active',
-                'created_at'
-            ]);
-            return response()->view('profile.profile', compact('profile'));
-        }
+        return response()->view('profile.profile', compact('profile', 'user'));
+    }
 }

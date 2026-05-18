@@ -19,10 +19,6 @@
         </div>
 
         <button class="btn btn-primary w-100">Login</button>
-
-        <div class="text-center mt-3">
-            <a href="/register">Register, If you already have no account</a>
-        </div>
     </form>
     <script>
         function loginUser(e) {

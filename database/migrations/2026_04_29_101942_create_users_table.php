@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username')->unique()->comment('Login username for staff');
             $table->string('password')->comment('Hashed password');
             $table->string('phone')->nullable()->comment('Contact number of staff');
-            $table->enum('role', ['reception', 'pharmacy', 'admin'])->comment('Defines system access level');
+            $table->foreignId('role_id')->nullable()->comment('Role id of user')->constrained('roles')->nullOnDelete();
             $table->boolean('is_active')->default(true)->comment('User active/inactive status');
             $table->timestamps();
         });

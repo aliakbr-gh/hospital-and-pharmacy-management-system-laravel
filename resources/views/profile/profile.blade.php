@@ -25,7 +25,7 @@
                 <th>Role</th>
                 <td>
                     <span class="badge bg-primary">
-                        {{ $profile['role'] }}
+                        {{ $user->role->name }}
                     </span>
                 </td>
             </tr>

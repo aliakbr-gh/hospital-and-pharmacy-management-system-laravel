@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'phone',
-        'role',
+        'role_id',
         'password',
         'is_active'
     ];
@@ -28,6 +28,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function role(){
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -37,7 +41,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'role_id' => 'integer',
+            'is_active' => 'boolean',
             'password' => 'hashed',
         ];
     }
