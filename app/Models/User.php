@@ -41,8 +41,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'role_id' => 'integer',
-            'is_active' => 'boolean',
             'password' => 'hashed',
         ];
     }

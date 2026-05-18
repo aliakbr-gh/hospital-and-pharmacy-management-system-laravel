@@ -71,7 +71,7 @@
                         username: $('#username').val(),
                         phone: $('#phone').val(),
                         password: $('#password').val(),
-                        role_id: Number($('#role_id').val()),
+                        role_id: $('#role_id').val(),
                         is_active: $('#is_active').is(':checked') ? 1 : 0,
                     },
 

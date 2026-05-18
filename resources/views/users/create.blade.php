@@ -47,7 +47,7 @@
                     username: $('#username').val(),
                     phone: $('#phone').val(),
                     password: $('#password').val(),
-                    role_id: Number($('#role_id').val()),
+                    role_id: $('#role_id').val(),
                 },
 
                 beforeSend: function() {
