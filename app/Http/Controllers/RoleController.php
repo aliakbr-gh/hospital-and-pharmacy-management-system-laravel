@@ -11,10 +11,11 @@ class RoleController extends Controller
     public function getAllRoles(Request $request)
     {
         $roles = Role::latest()->get();
-        return APIResponse::success('Roles fetched successfully', $roles);
+
+        return response()->view('roles.roles', compact('roles'));
     }
 
-    public function createRolePage(Request $request)
+    public function createRolesView(Request $request)
     {
         return response()->view('roles.create');
     }
@@ -40,7 +41,7 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
 
-        if (!$role) {
+        if (! $role) {
             abort(404);
         }
 
@@ -52,10 +53,17 @@ class RoleController extends Controller
 
     public function updateRole(Request $request, $id)
     {
+        if (in_array((int) $id, [1, 2, 3, 4])) {
+            return APIResponse::error(
+                'This role cannot be updated',
+                [],
+                403
+            );
+        }
+
         $role = Role::find($id);
 
-        if (!$role) {
-
+        if (! $role) {
             return APIResponse::error(
                 'Role not found',
                 [],
@@ -81,10 +89,17 @@ class RoleController extends Controller
 
     public function deleteRole(Request $request, $id)
     {
+        if (in_array((int) $id, [1, 2, 3, 4])) {
+            return APIResponse::error(
+                'This role cannot be updated',
+                [],
+                403
+            );
+        }
+
         $role = Role::find($id);
 
-        if (!$role) {
-
+        if (! $role) {
             return APIResponse::error(
                 'Role not found',
                 [],

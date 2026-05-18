@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -23,7 +23,8 @@ Route::middleware('role:superadmin')->prefix('roles')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn () => view('dashboard.dashboard'));
-    Route::middleware('role:admin,superadmin')->prefix('users')->group(function () {
+
+    Route::middleware('role:superadmin')->prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'getAllUsers']);
         Route::get('/{id}/edit', [UserController::class, 'editUser']);
         Route::patch('/{id}', [UserController::class, 'updateUser']);
@@ -31,6 +32,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [UserController::class, 'createUsersView']);
         Route::post('/create', [UserController::class, 'createUser']);
     });
+
+    Route::middleware('role:superadmin')->prefix('roles')->group(function () {
+        Route::get('/', [RoleController::class, 'getAllRoles']);
+        Route::get('/{id}/edit', [RoleController::class, 'editRole']);
+        Route::patch('/{id}', [RoleController::class, 'updateRole']);
+        Route::delete('/{id}', [RoleController::class, 'deleteRole']);
+        Route::get('/create', [RoleController::class, 'createRolesView']);
+        Route::post('/create', [RoleController::class, 'createRole']);
+    });
+
     Route::get('/profile', [AuthController::class, 'profile'])->name('ali');
     Route::post('/logout', [AuthController::class, 'logout']);
 });
